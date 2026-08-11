@@ -1,0 +1,37 @@
+# Package managers
+node_modules/
+/client/node_modules/
+/client/dist/
+
+# PHP Composer & Vendor
+vendor/
+/server/vendor/
+/server/bootstrap/cache/*
+/server/storage/framework/cache/data/*
+/server/storage/framework/sessions/*
+/server/storage/framework/testing/*
+/server/storage/framework/views/*
+/server/storage/*.key
+
+# Environment configurations
+.env
+/client/.env
+/client/.env.local
+/client/.env.production.local
+/server/.env
+/server/.env.backup
+
+# SQLite Databases & sessions
+/server/database/*.sqlite
+/server/database/*.sqlite-journal
+
+# IDEs & System files
+.vscode/
+.idea/
+Thumbs.db
+.DS_Store
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
