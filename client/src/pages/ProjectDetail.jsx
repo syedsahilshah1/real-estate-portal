@@ -42,6 +42,18 @@ export default function ProjectDetail() {
     }
   }, [project, plots]);
 
+  // Background Gallery Cross-fade Slideshow
+  const [bgIndex, setBgIndex] = useState(0);
+  const projectImages = project ? [project.image, ...(project.gallery || [])] : [];
+
+  useEffect(() => {
+    if (projectImages.length <= 1) return;
+    const timer = setInterval(() => {
+      setBgIndex((prev) => (prev + 1) % projectImages.length);
+    }, 5000);
+    return () => clearInterval(timer);
+  }, [projectImages.length]);
+
   if (!project) {
     return (
       <div className="min-h-screen pt-28 flex flex-col items-center justify-center text-center">
@@ -119,31 +131,44 @@ export default function ProjectDetail() {
 
   return (
     <div className="bg-slate-50 min-h-screen pt-28 pb-20">
-      {/* Banner */}
-      <div className="relative h-[45vh] w-full overflow-hidden bg-brand-navy">
-        <img
-          src={project.image}
-          alt={project.name}
-          className="w-full h-full object-cover opacity-45"
-        />
-        <div className="absolute inset-0 bg-gradient-to-t from-slate-900/90 to-brand-navy/30"></div>
-        <div className="absolute bottom-10 left-0 w-full">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-white">
-            <RevealOnScroll animation="down" delay={100}>
-              <span className="bg-brand-gold text-brand-navy font-black text-[9px] uppercase tracking-widest px-3.5 py-1.5 rounded-full shadow-md">
-                {project.type}
-              </span>
-            </RevealOnScroll>
-            <RevealOnScroll animation="up" delay={200}>
-              <h1 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold uppercase mt-2">{project.name}</h1>
-            </RevealOnScroll>
-            <RevealOnScroll animation="up" delay={300}>
-              <div className="flex items-center text-slate-300 text-xs sm:text-sm mt-3">
-                <MapPin className="w-4 h-4 text-brand-gold mr-1.5 shrink-0" />
+      {/* Banner with HD Smooth Cross-Fade Image Slideshow */}
+      <div className="relative h-[50vh] sm:h-[55vh] w-full overflow-hidden bg-brand-navy flex items-center">
+        {projectImages.map((img, idx) => (
+          <div
+            key={idx}
+            className={`absolute inset-0 bg-cover bg-center transition-opacity duration-1000 ease-in-out transform scale-105 ${
+              idx === bgIndex ? 'opacity-100' : 'opacity-0'
+            }`}
+            style={{ backgroundImage: `url('${img}')` }}
+          >
+            <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/75 to-slate-900/60"></div>
+          </div>
+        ))}
+
+        <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full text-white">
+          <RevealOnScroll animation="down" delay={100}>
+            <span className="bg-[#B89047] text-slate-950 font-black text-[10px] uppercase tracking-widest px-4 py-1.5 rounded-full shadow-lg inline-block mb-3">
+              {project.type}
+            </span>
+          </RevealOnScroll>
+
+          <RevealOnScroll animation="up" delay={200}>
+            <h1 className="text-4xl sm:text-6xl lg:text-7xl font-serif font-bold uppercase tracking-tight text-white drop-shadow-2xl">
+              {project.name}
+            </h1>
+          </RevealOnScroll>
+
+          <RevealOnScroll animation="up" delay={300}>
+            <div className="flex items-center text-slate-200 text-xs sm:text-sm mt-3 space-x-4">
+              <div className="flex items-center font-semibold">
+                <MapPin className="w-4 h-4 text-[#B89047] mr-1.5 shrink-0" />
                 <span>{project.location}</span>
               </div>
-            </RevealOnScroll>
-          </div>
+              <span className="bg-white/10 backdrop-blur-md px-3 py-1 rounded-full text-[11px] font-bold border border-white/10">
+                Area: {project.total_area}
+              </span>
+            </div>
+          </RevealOnScroll>
         </div>
       </div>
 
