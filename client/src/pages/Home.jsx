@@ -30,8 +30,10 @@ export default function Home() {
 
   // Search state
   const [searchTerm, setSearchTerm] = useState('');
+  const [selectedProjectSlug, setSelectedProjectSlug] = useState('');
   const [projectType, setProjectType] = useState('');
   const [location, setLocation] = useState('');
+  const [plotSize, setPlotSize] = useState('');
 
   // Category filter state for Featured Projects
   const [activeCategory, setActiveCategory] = useState('All');
@@ -53,7 +55,7 @@ export default function Home() {
   }, [heroImages.length]);
 
   // Installment Calculator State
-  const [calcProject, setCalcProject] = useState('2'); // default Phase II
+  const [calcProject, setCalcProject] = useState('2');
   const [calcPlotSize, setCalcPlotSize] = useState('5.5 Marla');
 
   // Lead inquiry form state
@@ -63,10 +65,15 @@ export default function Home() {
 
   const handleSearch = (e) => {
     e.preventDefault();
+    if (selectedProjectSlug) {
+      navigate(`/projects/${selectedProjectSlug}`);
+      return;
+    }
     let queryParams = [];
     if (searchTerm) queryParams.push(`search=${encodeURIComponent(searchTerm)}`);
     if (projectType) queryParams.push(`type=${encodeURIComponent(projectType)}`);
     if (location) queryParams.push(`location=${encodeURIComponent(location)}`);
+    if (plotSize) queryParams.push(`size=${encodeURIComponent(plotSize)}`);
 
     navigate(`/projects?${queryParams.join('&')}`);
   };
@@ -165,35 +172,58 @@ export default function Home() {
           </RevealOnScroll>
 
           <RevealOnScroll animation="up" delay={300}>
-            <Link
-              to="/projects"
-              className="inline-flex items-center space-x-2 text-white font-serif text-sm sm:text-base border-b-2 border-white/80 hover:border-brand-gold hover:text-brand-gold pb-1 mt-6 mb-8 tracking-wider uppercase transition-all duration-300 group"
-            >
-              <span>Explore Projects</span>
-              <ArrowUpRight className="w-4 h-4 group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform" />
-            </Link>
+            <div className="flex flex-col items-center space-y-4 mb-6">
+              <Link
+                to="/projects"
+                className="inline-flex items-center space-x-2 text-white font-serif text-sm sm:text-base border-b-2 border-white/80 hover:border-brand-gold hover:text-brand-gold pb-1 tracking-wider uppercase transition-all duration-300 group"
+              >
+                <span>Explore Projects</span>
+                <ArrowUpRight className="w-4 h-4 group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform" />
+              </Link>
+
+              {/* Clickable Quick Project Name Shortcut Pills */}
+              <div className="flex flex-wrap justify-center gap-2 max-w-4xl mx-auto pt-2">
+                {projects.map((proj) => (
+                  <Link
+                    key={proj.id}
+                    to={`/projects/${proj.slug}`}
+                    className="px-3.5 py-1 bg-white/10 hover:bg-[#B89047] hover:text-slate-950 text-slate-200 border border-white/20 rounded-full text-[11px] font-bold uppercase tracking-wider backdrop-blur-md transition-all duration-300 shadow-md hover:scale-105"
+                  >
+                    {proj.name}
+                  </Link>
+                ))}
+              </div>
+            </div>
           </RevealOnScroll>
 
           {/* Quick Glassmorphic Search Form */}
           <RevealOnScroll animation="zoom" delay={400}>
             <form
               onSubmit={handleSearch}
-              className="mt-4 bg-brand-navy-light/85 backdrop-blur-xl p-4 sm:p-6 rounded-3xl border border-white/15 shadow-2xl max-w-4xl mx-auto grid grid-cols-1 sm:grid-cols-4 gap-4 hover-glow-gold"
+              className="mt-2 bg-brand-navy-light/85 backdrop-blur-xl p-4 sm:p-6 rounded-3xl border border-white/15 shadow-2xl max-w-5xl mx-auto grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4 hover-glow-gold"
             >
-              <div className="relative text-left">
+              {/* Project Name Selector */}
+              <div className="text-left">
                 <label className="block text-[10px] text-slate-400 font-bold uppercase tracking-wider mb-1.5 pl-1">
-                  Search Project
+                  Select Project Name
                 </label>
-                <div className="relative">
-                  <Search className="absolute left-3 top-3 w-4 h-4 text-brand-gold" />
-                  <input
-                    type="text"
-                    value={searchTerm}
-                    onChange={(e) => setSearchTerm(e.target.value)}
-                    placeholder="e.g. Faisal Hills"
-                    className="w-full bg-white/5 border border-white/15 focus:border-brand-gold rounded-xl py-2.5 pl-9 pr-4 text-xs text-white placeholder-slate-400 focus:outline-none transition-all duration-300"
-                  />
-                </div>
+                <select
+                  value={selectedProjectSlug}
+                  onChange={(e) => {
+                    setSelectedProjectSlug(e.target.value);
+                    if (e.target.value) {
+                      navigate(`/projects/${e.target.value}`);
+                    }
+                  }}
+                  className="w-full bg-white/10 border border-white/15 focus:border-brand-gold rounded-xl py-2.5 px-3 text-xs text-slate-200 focus:outline-none focus:text-white transition cursor-pointer font-semibold"
+                >
+                  <option value="" className="bg-brand-navy">Choose Project Name...</option>
+                  {projects.map((proj) => (
+                    <option key={proj.id} value={proj.slug} className="bg-brand-navy">
+                      {proj.name}
+                    </option>
+                  ))}
+                </select>
               </div>
 
               <div className="text-left">
@@ -224,6 +254,24 @@ export default function Home() {
                   <option value="Islamabad" className="bg-brand-navy">Islamabad</option>
                   <option value="Rawalpindi" className="bg-brand-navy">Rawalpindi</option>
                   <option value="Taxila" className="bg-brand-navy">Taxila</option>
+                </select>
+              </div>
+
+              <div className="text-left">
+                <label className="block text-[10px] text-slate-400 font-bold uppercase tracking-wider mb-1.5 pl-1">
+                  Plot Size / Marla
+                </label>
+                <select
+                  value={plotSize}
+                  onChange={(e) => setPlotSize(e.target.value)}
+                  className="w-full bg-white/10 border border-white/15 focus:border-brand-gold rounded-xl py-2.5 px-3 text-xs text-slate-200 focus:outline-none focus:text-white transition cursor-pointer"
+                >
+                  <option value="" className="bg-brand-navy">All Plot Sizes</option>
+                  <option value="5 Marla" className="bg-brand-navy">5 Marla</option>
+                  <option value="8 Marla" className="bg-brand-navy">8 Marla</option>
+                  <option value="10 Marla" className="bg-brand-navy">10 Marla</option>
+                  <option value="1 Kanal" className="bg-brand-navy">1 Kanal</option>
+                  <option value="Commercial" className="bg-brand-navy">Commercial Units</option>
                 </select>
               </div>
 

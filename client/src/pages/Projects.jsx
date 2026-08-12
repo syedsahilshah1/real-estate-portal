@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useLocation, Link } from 'react-router-dom';
+import { useLocation, useNavigate, Link } from 'react-router-dom';
 import { useApp } from '../context/AppContext';
 import RevealOnScroll from '../components/RevealOnScroll';
 import { Search, MapPin, Building2, SlidersHorizontal, ArrowUpDown, ArrowUpRight } from 'lucide-react';
@@ -7,6 +7,7 @@ import { Search, MapPin, Building2, SlidersHorizontal, ArrowUpDown, ArrowUpRight
 export default function Projects() {
   const { projects } = useApp();
   const routerLocation = useLocation();
+  const navigate = useNavigate();
 
   // Search/Filter states
   const [searchTerm, setSearchTerm] = useState('');
@@ -139,17 +140,24 @@ export default function Projects() {
               <span>Filter Ventures</span>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-              {/* Search Input */}
-              <div className="relative md:col-span-2">
-                <Search className="absolute left-3.5 top-3.5 w-4 h-4 text-slate-400" />
-                <input
-                  type="text"
-                  value={searchTerm}
-                  onChange={(e) => setSearchTerm(e.target.value)}
-                  placeholder="Search developments by name..."
-                  className="w-full bg-slate-50 border border-slate-200 focus:border-brand-gold focus:bg-white rounded-xl py-3 pl-10 pr-4 text-xs text-brand-navy placeholder-slate-400 focus:outline-none transition"
-                />
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+              {/* Project Name Direct Select */}
+              <div>
+                <select
+                  onChange={(e) => {
+                    if (e.target.value && e.target.value !== 'All') {
+                      navigate(`/projects/${e.target.value}`);
+                    }
+                  }}
+                  className="w-full bg-slate-50 border border-slate-200 focus:border-brand-gold focus:bg-white rounded-xl py-3 px-3 text-xs text-brand-navy font-bold focus:outline-none transition cursor-pointer"
+                >
+                  <option value="All">Select Project by Name...</option>
+                  {projects.map((proj) => (
+                    <option key={proj.id} value={proj.slug}>
+                      {proj.name}
+                    </option>
+                  ))}
+                </select>
               </div>
 
               {/* Location Select */}
@@ -166,37 +174,87 @@ export default function Projects() {
                 </select>
               </div>
 
-              {/* Sort Select */}
+              {/* Plot Size / Marla Select */}
+              <div>
+                <select
+                  value={selectedSize}
+                  onChange={(e) => setSelectedSize(e.target.value)}
+                  className="w-full bg-slate-50 border border-slate-200 focus:border-brand-gold focus:bg-white rounded-xl py-3 px-3 text-xs text-slate-700 focus:outline-none transition cursor-pointer"
+                >
+                  <option value="All">All Plot Sizes</option>
+                  <option value="5 Marla">5 Marla Plots</option>
+                  <option value="8 Marla">8 Marla Plots</option>
+                  <option value="10 Marla">10 Marla Plots</option>
+                  <option value="1 Kanal">1 Kanal Plots</option>
+                  <option value="Commercial">Commercial Units</option>
+                </select>
+              </div>
+
+              {/* Search Text Input */}
               <div>
                 <div className="relative">
-                  <ArrowUpDown className="absolute right-3.5 top-3.5 w-4 h-4 text-slate-400 pointer-events-none" />
-                  <select
-                    value={sortBy}
-                    onChange={(e) => setSortBy(e.target.value)}
-                    className="w-full bg-slate-50 border border-slate-200 focus:border-brand-gold focus:bg-white rounded-xl py-3 pl-3 pr-10 text-xs text-slate-700 focus:outline-none transition cursor-pointer appearance-none"
-                  >
-                    <option value="name">Sort by Name</option>
-                    <option value="status">Sort by Status</option>
-                  </select>
+                  <Search className="absolute left-3.5 top-3.5 w-4 h-4 text-slate-400" />
+                  <input
+                    type="text"
+                    value={searchTerm}
+                    onChange={(e) => setSearchTerm(e.target.value)}
+                    placeholder="Search developments..."
+                    className="w-full bg-slate-50 border border-slate-200 focus:border-brand-gold focus:bg-white rounded-xl py-3 pl-10 pr-4 text-xs text-brand-navy placeholder-slate-400 focus:outline-none transition"
+                  />
                 </div>
               </div>
             </div>
 
-            {/* Category Tabs */}
-            <div className="flex border-b border-slate-100 pb-2 overflow-x-auto gap-2">
-              {['All', 'Residential', 'High-Rise'].map((type) => (
-                <button
-                  key={type}
-                  onClick={() => setSelectedType(type)}
-                  className={`py-2 px-5 text-xs font-bold tracking-wide rounded-xl uppercase transition-all duration-300 ${
-                    selectedType === type
-                      ? 'bg-brand-navy text-white shadow-md'
-                      : 'text-slate-500 hover:text-brand-navy hover:bg-slate-100'
-                  }`}
-                >
-                  {type === 'All' ? 'All Portfolio' : type === 'Residential' ? 'Residential Communities' : 'High-Rise & Commercial'}
-                </button>
-              ))}
+            {/* Project Name Direct Shortcut Pills */}
+            <div className="pt-2 border-t border-slate-100 space-y-2">
+              <div className="flex overflow-x-auto gap-2 items-center pb-1">
+                <span className="text-[10px] text-slate-400 font-bold uppercase tracking-wider mr-1 shrink-0">Ventures:</span>
+                {projects.map((proj) => (
+                  <Link
+                    key={proj.id}
+                    to={`/projects/${proj.slug}`}
+                    className="py-1 px-3 bg-slate-100 hover:bg-[#B89047] text-slate-800 hover:text-slate-950 text-xs font-extrabold uppercase rounded-lg border border-slate-200/80 transition-all duration-300 shrink-0 hover:scale-105 shadow-sm"
+                  >
+                    {proj.name} ➔
+                  </Link>
+                ))}
+              </div>
+
+              {/* Category & Marla Size Tabs */}
+              <div className="flex border-t border-slate-100 pt-2 overflow-x-auto gap-2">
+                <span className="text-[10px] text-slate-400 font-bold uppercase tracking-wider self-center mr-2">Type:</span>
+                {['All', 'Residential', 'High-Rise'].map((type) => (
+                  <button
+                    key={type}
+                    onClick={() => setSelectedType(type)}
+                    className={`py-1.5 px-4 text-xs font-bold tracking-wide rounded-xl uppercase transition-all duration-300 ${
+                      selectedType === type
+                        ? 'bg-brand-navy text-white shadow-md'
+                        : 'text-slate-500 hover:text-brand-navy hover:bg-slate-100'
+                    }`}
+                  >
+                    {type === 'All' ? 'All Portfolio' : type === 'Residential' ? 'Residential Communities' : 'High-Rise & Commercial'}
+                  </button>
+                ))}
+              </div>
+
+              {/* Plot Size Marla Quick Filter Pills */}
+              <div className="flex overflow-x-auto gap-2 items-center pt-1">
+                <span className="text-[10px] text-slate-400 font-bold uppercase tracking-wider mr-2 shrink-0">Marla / Size:</span>
+                {sizeOptions.map((size) => (
+                  <button
+                    key={size}
+                    onClick={() => setSelectedSize(size)}
+                    className={`py-1 px-3.5 text-xs font-bold tracking-wide rounded-lg uppercase transition-all duration-300 shrink-0 ${
+                      selectedSize === size
+                        ? 'bg-[#B89047] text-slate-950 shadow-sm'
+                        : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
+                    }`}
+                  >
+                    {size === 'All' ? 'All Sizes' : size}
+                  </button>
+                ))}
+              </div>
             </div>
           </div>
         </RevealOnScroll>
