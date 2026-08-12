@@ -148,19 +148,19 @@ export default function ProjectDetail() {
           </div>
         ))}
 
-        {/* Manual Left Arrow Control */}
+        {/* Manual Left Arrow Control (Hidden on mobile) */}
         <button
           onClick={() => setBgIndex((prev) => (prev - 1 + projectImages.length) % projectImages.length)}
-          className="absolute left-6 top-1/2 -translate-y-1/2 z-30 p-4 bg-slate-950/70 hover:bg-[#B89047] text-white hover:text-slate-950 rounded-full backdrop-blur-md transition-all duration-300 shadow-2xl opacity-0 group-hover:opacity-100 hover:scale-110"
+          className="hidden md:flex absolute left-6 top-1/2 -translate-y-1/2 z-30 p-4 bg-slate-950/70 hover:bg-[#B89047] text-white hover:text-slate-950 rounded-full backdrop-blur-md transition-all duration-300 shadow-2xl opacity-0 group-hover:opacity-100 hover:scale-110 items-center justify-center"
           aria-label="Previous Banner Image"
         >
           <ChevronLeft className="w-6 h-6" />
         </button>
 
-        {/* Manual Right Arrow Control */}
+        {/* Manual Right Arrow Control (Hidden on mobile) */}
         <button
           onClick={() => setBgIndex((prev) => (prev + 1) % projectImages.length)}
-          className="absolute right-6 top-1/2 -translate-y-1/2 z-30 p-4 bg-slate-950/70 hover:bg-[#B89047] text-white hover:text-slate-950 rounded-full backdrop-blur-md transition-all duration-300 shadow-2xl opacity-0 group-hover:opacity-100 hover:scale-110"
+          className="hidden md:flex absolute right-6 top-1/2 -translate-y-1/2 z-30 p-4 bg-slate-950/70 hover:bg-[#B89047] text-white hover:text-slate-950 rounded-full backdrop-blur-md transition-all duration-300 shadow-2xl opacity-0 group-hover:opacity-100 hover:scale-110 items-center justify-center"
           aria-label="Next Banner Image"
         >
           <ChevronRight className="w-6 h-6" />
@@ -263,14 +263,14 @@ export default function ProjectDetail() {
                     ></div>
                   ))}
 
-                  {/* Left / Right Arrow Navigation */}
+                  {/* Left / Right Arrow Navigation (Hidden on mobile) */}
                   <button
                     onClick={() => {
                       const currentIdx = projectImages.indexOf(selectedImage);
                       const prevIdx = (currentIdx - 1 + projectImages.length) % projectImages.length;
                       setSelectedImage(projectImages[prevIdx]);
                     }}
-                    className="absolute left-4 top-1/2 -translate-y-1/2 z-20 p-3.5 bg-slate-950/70 hover:bg-[#B89047] text-white hover:text-slate-950 rounded-full backdrop-blur-md transition-all duration-300 shadow-xl opacity-0 group-hover:opacity-100 hover:scale-110"
+                    className="hidden md:flex absolute left-4 top-1/2 -translate-y-1/2 z-20 p-3.5 bg-slate-950/70 hover:bg-[#B89047] text-white hover:text-slate-950 rounded-full backdrop-blur-md transition-all duration-300 shadow-xl opacity-0 group-hover:opacity-100 hover:scale-110 items-center justify-center"
                     aria-label="Previous Image"
                   >
                     <ChevronLeft className="w-6 h-6" />
@@ -282,7 +282,7 @@ export default function ProjectDetail() {
                       const nextIdx = (currentIdx + 1) % projectImages.length;
                       setSelectedImage(projectImages[nextIdx]);
                     }}
-                    className="absolute right-4 top-1/2 -translate-y-1/2 z-20 p-3.5 bg-slate-950/70 hover:bg-[#B89047] text-white hover:text-slate-950 rounded-full backdrop-blur-md transition-all duration-300 shadow-xl opacity-0 group-hover:opacity-100 hover:scale-110"
+                    className="hidden md:flex absolute right-4 top-1/2 -translate-y-1/2 z-20 p-3.5 bg-slate-950/70 hover:bg-[#B89047] text-white hover:text-slate-950 rounded-full backdrop-blur-md transition-all duration-300 shadow-xl opacity-0 group-hover:opacity-100 hover:scale-110 items-center justify-center"
                     aria-label="Next Image"
                   >
                     <ChevronRight className="w-6 h-6" />
