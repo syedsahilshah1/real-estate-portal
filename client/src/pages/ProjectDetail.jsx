@@ -130,45 +130,86 @@ export default function ProjectDetail() {
   };
 
   return (
-    <div className="bg-slate-50 min-h-screen pt-28 pb-20">
-      {/* Banner with HD Smooth Cross-Fade Image Slideshow */}
-      <div className="relative h-[50vh] sm:h-[55vh] w-full overflow-hidden bg-brand-navy flex items-center">
+    <div className="bg-slate-50 min-h-screen pt-24 pb-20">
+      {/* Grand Top Banner with HD Smooth Cross-Fade Image Slideshow */}
+      <div className="relative h-[65vh] sm:h-[75vh] lg:h-[80vh] w-full overflow-hidden bg-slate-950 flex items-center justify-center group">
+        
+        {/* Smooth Cross-Fade Background Layers */}
         {projectImages.map((img, idx) => (
           <div
             key={idx}
-            className={`absolute inset-0 bg-cover bg-center transition-opacity duration-1000 ease-in-out transform scale-105 ${
-              idx === bgIndex ? 'opacity-100' : 'opacity-0'
+            className={`absolute inset-0 bg-cover bg-center transition-all duration-1000 ease-in-out transform ${
+              idx === bgIndex ? 'opacity-100 scale-105 z-10' : 'opacity-0 scale-100 pointer-events-none z-0'
             }`}
             style={{ backgroundImage: `url('${img}')` }}
           >
-            <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/75 to-slate-900/60"></div>
+            {/* Dark Gradient Overlay for Readability */}
+            <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/70 to-slate-900/50"></div>
           </div>
         ))}
 
-        <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full text-white">
+        {/* Manual Left Arrow Control */}
+        <button
+          onClick={() => setBgIndex((prev) => (prev - 1 + projectImages.length) % projectImages.length)}
+          className="absolute left-6 top-1/2 -translate-y-1/2 z-30 p-4 bg-slate-950/70 hover:bg-[#B89047] text-white hover:text-slate-950 rounded-full backdrop-blur-md transition-all duration-300 shadow-2xl opacity-0 group-hover:opacity-100 hover:scale-110"
+          aria-label="Previous Banner Image"
+        >
+          <ChevronLeft className="w-6 h-6" />
+        </button>
+
+        {/* Manual Right Arrow Control */}
+        <button
+          onClick={() => setBgIndex((prev) => (prev + 1) % projectImages.length)}
+          className="absolute right-6 top-1/2 -translate-y-1/2 z-30 p-4 bg-slate-950/70 hover:bg-[#B89047] text-white hover:text-slate-950 rounded-full backdrop-blur-md transition-all duration-300 shadow-2xl opacity-0 group-hover:opacity-100 hover:scale-110"
+          aria-label="Next Banner Image"
+        >
+          <ChevronRight className="w-6 h-6" />
+        </button>
+
+        {/* Main Content Overlay */}
+        <div className="relative z-20 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full text-white mt-10">
           <RevealOnScroll animation="down" delay={100}>
-            <span className="bg-[#B89047] text-slate-950 font-black text-[10px] uppercase tracking-widest px-4 py-1.5 rounded-full shadow-lg inline-block mb-3">
+            <span className="bg-[#B89047] text-slate-950 font-black text-[10px] sm:text-xs uppercase tracking-widest px-4 py-1.5 rounded-full shadow-xl inline-block mb-4">
               {project.type}
             </span>
           </RevealOnScroll>
 
           <RevealOnScroll animation="up" delay={200}>
-            <h1 className="text-4xl sm:text-6xl lg:text-7xl font-serif font-bold uppercase tracking-tight text-white drop-shadow-2xl">
+            <h1 className="text-5xl sm:text-7xl lg:text-8xl font-serif font-bold uppercase tracking-tight text-white drop-shadow-2xl leading-none">
               {project.name}
             </h1>
           </RevealOnScroll>
 
           <RevealOnScroll animation="up" delay={300}>
-            <div className="flex items-center text-slate-200 text-xs sm:text-sm mt-3 space-x-4">
-              <div className="flex items-center font-semibold">
-                <MapPin className="w-4 h-4 text-[#B89047] mr-1.5 shrink-0" />
+            <div className="flex flex-wrap items-center text-slate-200 text-xs sm:text-sm mt-5 gap-4">
+              <div className="flex items-center font-semibold bg-slate-900/60 backdrop-blur-md px-4 py-2 rounded-2xl border border-white/10 shadow-lg">
+                <MapPin className="w-4 h-4 text-[#B89047] mr-2 shrink-0" />
                 <span>{project.location}</span>
               </div>
-              <span className="bg-white/10 backdrop-blur-md px-3 py-1 rounded-full text-[11px] font-bold border border-white/10">
-                Area: {project.total_area}
-              </span>
+              
+              <div className="bg-slate-900/60 backdrop-blur-md px-4 py-2 rounded-2xl text-xs font-bold border border-white/10 shadow-lg">
+                Development Area: <strong className="text-brand-gold">{project.total_area}</strong>
+              </div>
+
+              <div className="bg-emerald-600/80 backdrop-blur-md px-4 py-2 rounded-2xl text-xs font-bold border border-white/10 shadow-lg text-white">
+                ✓ NOC Approved
+              </div>
             </div>
           </RevealOnScroll>
+        </div>
+
+        {/* Slide Indicator Dots */}
+        <div className="absolute bottom-6 left-1/2 -translate-x-1/2 z-30 flex space-x-2">
+          {projectImages.map((_, idx) => (
+            <button
+              key={idx}
+              onClick={() => setBgIndex(idx)}
+              className={`h-2 rounded-full transition-all duration-300 ${
+                idx === bgIndex ? 'w-8 bg-[#B89047]' : 'w-2 bg-white/40 hover:bg-white'
+              }`}
+              aria-label={`Go to slide ${idx + 1}`}
+            ></button>
+          ))}
         </div>
       </div>
 
