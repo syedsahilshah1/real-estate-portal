@@ -3,7 +3,7 @@ import { useParams, useNavigate, Link } from 'react-router-dom';
 import { useApp } from '../context/AppContext';
 import MockMap from '../components/MockMap';
 import RevealOnScroll from '../components/RevealOnScroll';
-import { MapPin, Phone, Mail, Award, FileDown, Layers, Calculator, Check, ArrowRight, Star, Heart } from 'lucide-react';
+import { MapPin, Phone, Mail, Award, FileDown, Layers, Calculator, Check, ArrowRight, Star, Heart, ChevronLeft, ChevronRight } from 'lucide-react';
 
 export default function ProjectDetail() {
   const { slug } = useParams();
@@ -202,25 +202,71 @@ export default function ProjectDetail() {
               </div>
             </RevealOnScroll>
 
-            {/* Gallery */}
+            {/* Gallery Section with Increased Size & Smooth Cross-Fade Transition */}
             <RevealOnScroll animation="up" delay={200}>
-              <div className="bg-white rounded-3xl p-8 border border-slate-200/90 shadow-md space-y-6">
-                <h2 className="text-xl font-extrabold text-brand-navy uppercase tracking-tight">Image & Progress Gallery</h2>
+              <div className="bg-white rounded-3xl p-6 sm:p-8 border border-slate-200/90 shadow-md space-y-6">
+                <div className="flex justify-between items-center pb-2 border-b border-slate-100">
+                  <h2 className="text-xl font-extrabold text-brand-navy uppercase tracking-tight">Development & Progress Gallery</h2>
+                  <span className="text-xs font-serif italic text-slate-400">High-Resolution Architectural Renders</span>
+                </div>
                 
-                <div className="h-96 rounded-2xl overflow-hidden border border-slate-200">
-                  <img src={selectedImage} alt={project.name} className="w-full h-full object-cover transition-all duration-300" />
+                {/* Main Large Image Box with Cross-Fade Transition */}
+                <div className="relative h-[480px] sm:h-[600px] lg:h-[640px] rounded-3xl overflow-hidden border border-slate-200 shadow-inner group bg-slate-950">
+                  {projectImages.map((img, idx) => (
+                    <div
+                      key={idx}
+                      className={`absolute inset-0 bg-cover bg-center transition-all duration-700 ease-in-out transform ${
+                        selectedImage === img ? 'opacity-100 scale-100 z-10' : 'opacity-0 scale-105 pointer-events-none z-0'
+                      }`}
+                      style={{ backgroundImage: `url('${img}')` }}
+                    ></div>
+                  ))}
+
+                  {/* Left / Right Arrow Navigation */}
+                  <button
+                    onClick={() => {
+                      const currentIdx = projectImages.indexOf(selectedImage);
+                      const prevIdx = (currentIdx - 1 + projectImages.length) % projectImages.length;
+                      setSelectedImage(projectImages[prevIdx]);
+                    }}
+                    className="absolute left-4 top-1/2 -translate-y-1/2 z-20 p-3.5 bg-slate-950/70 hover:bg-[#B89047] text-white hover:text-slate-950 rounded-full backdrop-blur-md transition-all duration-300 shadow-xl opacity-0 group-hover:opacity-100 hover:scale-110"
+                    aria-label="Previous Image"
+                  >
+                    <ChevronLeft className="w-6 h-6" />
+                  </button>
+
+                  <button
+                    onClick={() => {
+                      const currentIdx = projectImages.indexOf(selectedImage);
+                      const nextIdx = (currentIdx + 1) % projectImages.length;
+                      setSelectedImage(projectImages[nextIdx]);
+                    }}
+                    className="absolute right-4 top-1/2 -translate-y-1/2 z-20 p-3.5 bg-slate-950/70 hover:bg-[#B89047] text-white hover:text-slate-950 rounded-full backdrop-blur-md transition-all duration-300 shadow-xl opacity-0 group-hover:opacity-100 hover:scale-110"
+                    aria-label="Next Image"
+                  >
+                    <ChevronRight className="w-6 h-6" />
+                  </button>
+
+                  {/* Bottom Counter Badge */}
+                  <div className="absolute bottom-4 right-4 z-20 bg-slate-950/80 backdrop-blur-md text-white text-xs font-bold px-4 py-1.5 rounded-full border border-white/10 shadow-lg">
+                    {projectImages.indexOf(selectedImage) + 1} / {projectImages.length}
+                  </div>
                 </div>
 
-                <div className="grid grid-cols-3 gap-4">
-                  {project.gallery.map((img, index) => (
+                {/* Thumbnails Row */}
+                <div className="grid grid-cols-3 sm:grid-cols-4 gap-4 pt-2">
+                  {projectImages.map((img, index) => (
                     <button
                       key={index}
                       onClick={() => setSelectedImage(img)}
-                      className={`h-24 rounded-xl overflow-hidden border-2 transition ${
-                        selectedImage === img ? 'border-brand-gold scale-95 shadow-md' : 'border-slate-200 opacity-80 hover:opacity-100'
+                      className={`h-28 sm:h-32 rounded-2xl overflow-hidden border-2 transition-all duration-300 relative group ${
+                        selectedImage === img
+                          ? 'border-[#B89047] ring-4 ring-[#B89047]/30 scale-98 shadow-xl'
+                          : 'border-slate-200 opacity-70 hover:opacity-100 hover:scale-102'
                       }`}
                     >
-                      <img src={img} alt="" className="w-full h-full object-cover" />
+                      <img src={img} alt={`Gallery view ${index + 1}`} className="w-full h-full object-cover" />
+                      <div className={`absolute inset-0 bg-[#B89047]/10 transition-opacity ${selectedImage === img ? 'opacity-100' : 'opacity-0'}`}></div>
                     </button>
                   ))}
                 </div>
