@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Navigate, Link } from 'react-router-dom';
 import { useApp } from '../context/AppContext';
+import RevealOnScroll from '../components/RevealOnScroll';
 import { ShieldAlert, BarChart3, Building2, LayoutGrid, CheckSquare, Mail, Plus, Trash2, Edit, AlertCircle, Sparkles } from 'lucide-react';
 
 export default function AdminDashboard() {
@@ -87,7 +88,6 @@ export default function AdminDashboard() {
         setFormErr(res.message);
       }
     } else {
-      // Set a placeholder image if not provided
       const finalProj = {
         ...projectForm,
         image: projectForm.image || 'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=600&q=80'
