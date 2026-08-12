@@ -158,7 +158,7 @@ export default function Home() {
           </RevealOnScroll>
 
           <RevealOnScroll animation="up" delay={200}>
-            <h1 className="text-5xl sm:text-7xl lg:text-8xl font-serif font-bold uppercase tracking-widest text-white leading-none max-w-5xl mx-auto drop-shadow-2xl">
+            <h1 className="text-3xl sm:text-6xl lg:text-8xl font-serif font-bold uppercase tracking-wider sm:tracking-widest text-white leading-none max-w-5xl mx-auto drop-shadow-2xl px-2">
               TRANSFORMING <br />
               <span className="text-slate-100 font-light">LIVES</span>
             </h1>

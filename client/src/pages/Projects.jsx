@@ -12,6 +12,7 @@ export default function Projects() {
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedType, setSelectedType] = useState('All');
   const [selectedLocation, setSelectedLocation] = useState('All');
+  const [selectedSize, setSelectedSize] = useState('All');
   const [sortBy, setSortBy] = useState('name');
 
   // Read query params on load
@@ -20,10 +21,12 @@ export default function Projects() {
     const search = params.get('search');
     const type = params.get('type');
     const loc = params.get('location');
+    const size = params.get('size');
 
     if (search) setSearchTerm(search);
     if (type) setSelectedType(type);
     if (loc) setSelectedLocation(loc);
+    if (size) setSelectedSize(size);
   }, [routerLocation.search]);
 
   // Extract unique locations for the filter list
@@ -31,6 +34,9 @@ export default function Projects() {
     const parts = p.location.split(',');
     return parts[parts.length - 2]?.trim() || parts[parts.length - 1]?.trim() || p.location;
   }))];
+
+  // Plot Size Filter Options
+  const sizeOptions = ['All', '5 Marla', '8 Marla', '10 Marla', '1 Kanal', 'Commercial'];
 
   // Filtering Logic
   const filteredProjects = projects.filter(project => {
@@ -41,7 +47,11 @@ export default function Projects() {
     
     const matchesLocation = selectedLocation === 'All' || project.location.toLowerCase().includes(selectedLocation.toLowerCase());
 
-    return matchesSearch && matchesType && matchesLocation;
+    const matchesSize = selectedSize === 'All' || 
+                        project.description.toLowerCase().includes(selectedSize.toLowerCase()) ||
+                        project.total_area.toLowerCase().includes(selectedSize.toLowerCase().split(' ')[0]);
+
+    return matchesSearch && matchesType && matchesLocation && matchesSize;
   }).sort((a, b) => {
     if (sortBy === 'name') return a.name.localeCompare(b.name);
     if (sortBy === 'status') return a.status.localeCompare(b.status);
@@ -96,7 +106,7 @@ export default function Projects() {
           </RevealOnScroll>
 
           <RevealOnScroll animation="up" delay={200}>
-            <h1 className="text-4xl sm:text-6xl lg:text-7xl font-serif font-bold uppercase tracking-widest text-white leading-none max-w-5xl mx-auto drop-shadow-2xl">
+            <h1 className="text-3xl sm:text-6xl lg:text-7xl font-serif font-bold uppercase tracking-wider sm:tracking-widest text-white leading-none max-w-5xl mx-auto drop-shadow-2xl px-2">
               TRANSFORMING <br />
               <span className="text-slate-100 font-light">LIVES</span>
             </h1>

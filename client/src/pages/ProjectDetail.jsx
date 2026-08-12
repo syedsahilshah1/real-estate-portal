@@ -175,7 +175,7 @@ export default function ProjectDetail() {
           </RevealOnScroll>
 
           <RevealOnScroll animation="up" delay={200}>
-            <h1 className="text-5xl sm:text-7xl lg:text-8xl font-serif font-bold uppercase tracking-tight text-white drop-shadow-2xl leading-none">
+            <h1 className="text-3xl sm:text-7xl lg:text-8xl font-serif font-bold uppercase tracking-tight text-white drop-shadow-2xl leading-none break-words px-2">
               {project.name}
             </h1>
           </RevealOnScroll>
