@@ -14,7 +14,6 @@ vendor/
 /server/storage/*.key
 
 # Environment configurations
-.env
 /client/.env
 /client/.env.local
 /client/.env.production.local
@@ -26,7 +25,6 @@ vendor/
 /server/database/*.sqlite-journal
 
 # IDEs & System files
-.vscode/
 .idea/
 Thumbs.db
 .DS_Store
@@ -35,3 +33,4 @@ Thumbs.db
 *.njsproj
 *.sln
 *.sw?
+config.bat
