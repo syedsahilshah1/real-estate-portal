@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useApp } from '../context/AppContext';
+
 import RevealOnScroll from '../components/RevealOnScroll';
 import {
   Search,
